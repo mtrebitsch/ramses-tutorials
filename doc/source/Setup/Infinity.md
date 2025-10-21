@@ -66,7 +66,7 @@ cd ramses
 ```
 
 Now to compile RAMSES:
-1. edit `bin/Makefile` to replace `ifort` with `ifx` in the filename,
+1. edit `bin/Makefile` to replace `ifort` with `ifx`,
 2. change directory to `bin/`,
 3. and invoke the `make` command with the following arguments:
    ```bash
@@ -124,11 +124,11 @@ Take a note of that number, we will call it `<RANDOM_NUMBER>` in the following.
 Create an SSH tunnel from your laptop to Infinity
 ```bash
 ping -c 2 -s 999 infinity02.iap.fr
-ssh -L<RANDOM_NUMBER>:localhost:<RANDOM_NUMBER> user@infinity02.iap.fr
+ssh -L <RANDOM_NUMBER>:localhost:<RANDOM_NUMBER> user@infinity02.iap.fr
 ```
 This is the step `[ localhost:PORT1 ] -> [ login_node:PORT2 ]` above, with `PORT1 = PORT2 = RANDOM_NUMBER`.
 
-You can automatize this process by adding the following lines to your `~/.ssh/config` file on your laptop:
+You can automatize (on Linux/Mac) this process by adding the following lines to your `~/.ssh/config` file on your laptop:
 ```
 Host infinity
      LocalForward <RANDOM_NUMBER> localhost:<RANDOM_NUMBER>
@@ -177,7 +177,7 @@ We can now create a script to submit jupyterlab jobs. On infinity, create a new 
 NOTEBOOKPORT=<RANDOM_NUMBER>
 
 module load inteloneapi/2025.2.1
-module load fftw
+module load fftw2
 
 set -x
 
@@ -188,7 +188,7 @@ pkill jupyter-lab
 cd $SLURM_SUBMIT_DIR
 # setup reverse SSH tunnel between computing and login node
 # this is the step [ login_node:PORT2 ] ------> [ compute_node:PORT3 ], with PORT2 = PORT3 = RANDOM_NUMBER
-ssh -N -f -R $NOTEBOOKPORT:localhost:$NOTEBOOKPORT $SLURM_SUBMIT_HOST
+ssh -i ~/.ssh/<name_of_the_key_you_typed_above> -N -f -R $NOTEBOOKPORT:localhost:$NOTEBOOKPORT $SLURM_SUBMIT_HOST
 
 # launch the notebook, listening on the forwarded port
 ~/miniconda3/envs/ramses-env/bin/jupyter lab --port=$NOTEBOOKPORT --no-browser
