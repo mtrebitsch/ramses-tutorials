@@ -55,7 +55,7 @@ The recommended compiler on Infinity is the Intel compiler, which is provided by
 ```bash
 module load inteloneapi/2025.2.1
 # The following is also required for some tutorial, think about loading it!
-module load fftw
+module load fftw2
 ```
 As any module, you will need to load it each time you want to compile and/or run RAMSES.
 
@@ -178,6 +178,7 @@ NOTEBOOKPORT=<RANDOM_NUMBER>
 
 module load inteloneapi/2025.2.1
 module load fftw2
+module load ffmpeg
 
 set -x
 
@@ -203,3 +204,13 @@ sbatch ~/submit_notebook.sh
 If everything goes well, it should create a tunnel between the compute node and the login node.
 
 The file `notebook.err` should contain a string with the URL that you should access, e.g. `http://127.0.0.1:1<RANDOM_PORT>/lab?token=<SOME_LONG_STRING>` which you can open on your local machine in your favorite browser (Firefox/Chrome/~~Netscape~~).
+
+
+If you need to stop your script (or any other), you can:
+```bash
+# Identify what the job id is
+squeue -u $USER
+
+# Then cancel it
+scancel <JOB_ID>
+```
